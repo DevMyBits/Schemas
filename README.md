@@ -1,3 +1,3 @@
 # Schemas
 # Classes d'assistances
-DevMyBits.Evaluator
+DevMyBits.Evaluators
