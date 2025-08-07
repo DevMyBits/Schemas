@@ -3,7 +3,7 @@
  * Auteur : Yoann Meclot (DevMyBits)
  * E-mail : devmybits@gmail.com
  */
-public final class Schemas
+public class Schemas
 {
     private final Evaluator<String, Segment> segments = new Evaluators<>();
 
@@ -75,77 +75,79 @@ public final class Schemas
 
     public static final class Builder
     {
-        private StringBuilder builder;
-
-        public Builder authority(String authority)
+        public Authority authority(String authority)
         {
-            if (builder != null) throw new NullPointerException("You don't redefine authority !");
-            if (invalidInput(authority)) throw error("Invalid input. Authority must not have specific characters ':' and '/'.");
+            if (authority.contains(":") || authority.contains("/")) throw new IllegalArgumentException("Invalid input. Authority must not have specific characters ':' and '/'.");
 
-            builder = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
             builder.append("schemas://").append(authority);
 
-            return this;
+            return new Authority(builder);
         }
 
-        public Builder append(String key, short value)
+        public static final class Authority
         {
-            if (builder == null) throw new NullPointerException("Define authority before !");
-            if (invalidInput(key)) throw error("Invalid input. The key must not have specific characters ':' and '/'.");
+            private final StringBuilder builder;
 
-            builder.append("/").append(key).append(":").append(value);
-            return this;
-        }
+            public Authority append(String key, short value)
+            {
+                if (invalidInput(key)) throw error("Invalid input. The key must not have specific characters ':' and '/'.");
 
-        public Builder append(String key, int value)
-        {
-            if (builder == null) throw new NullPointerException("Define authority before !");
-            if (invalidInput(key)) throw error("Invalid input. The key must not have specific characters ':' and '/'.");
+                builder.append("/").append(key).append(":").append(value);
+                return this;
+            }
 
-            builder.append("/").append(key).append(":").append(value);
-            return this;
-        }
+            public Authority append(String key, int value)
+            {
+                if (invalidInput(key)) throw error("Invalid input. The key must not have specific characters ':' and '/'.");
 
-        public Builder append(String key, long value)
-        {
-            if (builder == null) throw new NullPointerException("Define authority before !");
-            if (invalidInput(key)) throw error("Invalid input. The key must not have specific characters ':' and '/'.");
+                builder.append("/").append(key).append(":").append(value);
+                return this;
+            }
 
-            builder.append("/").append(key).append(":").append(value);
-            return this;
-        }
+            public Authority append(String key, long value)
+            {
+                if (invalidInput(key)) throw error("Invalid input. The key must not have specific characters ':' and '/'.");
 
-        public Builder append(String key, boolean value)
-        {
-            if (builder == null) throw new NullPointerException("Define authority before !");
-            if (invalidInput(key)) throw error("Invalid input. The key must not have specific characters ':' and '/'.");
+                builder.append("/").append(key).append(":").append(value);
+                return this;
+            }
 
-            builder.append("/").append(key).append(":").append(value);
-            return this;
-        }
+            public Authority append(String key, boolean value)
+            {
+                if (invalidInput(key)) throw error("Invalid input. The key must not have specific characters ':' and '/'.");
 
-        public Builder append(String key, String value)
-        {
-            if (builder == null) throw new NullPointerException("Define authority before !");
-            if (invalidInput(key)) throw error("Invalid input. The key must not have specific characters ':' and '/'.");
+                builder.append("/").append(key).append(":").append(value);
+                return this;
+            }
 
-            builder.append("/").append(key).append(":").append(value);
-            return this;
-        }
+            public Authority append(String key, String value)
+            {
+                if (invalidInput(key)) throw error("Invalid input. The key must not have specific characters ':' and '/'.");
 
-        public Schemas build()
-        {
-            return new Schemas(builder.toString());
-        }
+                builder.append("/").append(key).append(":").append(value);
+                return this;
+            }
 
-        private boolean invalidInput(String text)
-        {
-            return text.contains(":") || text.contains("/");
-        }
+            public Schemas build()
+            {
+                return new Schemas(builder.toString());
+            }
 
-        private IllegalArgumentException error(String message)
-        {
-            return new IllegalArgumentException(message);
+            private boolean invalidInput(String text)
+            {
+                return text.contains(":") || text.contains("/");
+            }
+
+            private IllegalArgumentException error(String message)
+            {
+                return new IllegalArgumentException(message);
+            }
+
+            Authority(StringBuilder builder)
+            {
+                this.builder = builder;
+            }
         }
     }
 
